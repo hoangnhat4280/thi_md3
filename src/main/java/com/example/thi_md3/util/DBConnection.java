@@ -5,17 +5,26 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ecommerce";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASS = "123456";  // Thay bằng mật khẩu thực tế của bạn
 
-    public static Connection getConnection() throws SQLException {
+    private static final String URL = "jdbc:mysql://localhost:3306/ecommerce_db";
+    private static final String USER = "root";
+    private static final String PASSWORD = "123456";
+
+    static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new SQLException("Không tìm thấy driver JDBC.");
+            System.err.println("Failed to load JDBC Driver: " + e.getMessage());
         }
+    }
+
+    public static Connection getConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("Connection failed: " + e.getMessage());
+        }
+        return connection;
     }
 }
